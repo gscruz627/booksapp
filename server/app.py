@@ -3,9 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 #NEED CONNECTION URL
-#NEED TODICT FUNCTIONS ON USER AND BOOK
-#TOMORROW WE DO BASIC ROUTING USING BLUEPRINTS, AUTH AND MAIN
 #ALSO TEST USING POSTMAN
+# DEAl with connection stuff
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:Sisnacrack40$@5432/books"
 db = SQLAlchemy(app)
 
 @app.route("/")
