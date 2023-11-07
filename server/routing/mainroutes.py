@@ -1,11 +1,12 @@
 from flask import Blueprint, request, jsonify
-from ..app import db
-from ..models.Book import Book
-from ..verifyToken import verifyToken
+from db import db
+from models import User,Book
+from verifyToken import verifyToken
 
-main = Blueprint(__name__)
+main = Blueprint("main", __name__)
 
 @main.route("/create", methods=["POST"])
+@verifyToken
 def createBook():
     title = request.form["title"]
     author = request.form["author"]

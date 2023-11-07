@@ -1,34 +1,41 @@
 from flask import request, Blueprint, jsonify
-from ..models.User import User
-from ..app import db
+from flask_cors import cross_origin
+from models import User
+from db import db
 from werkzeug.security import generate_password_hash, check_password_hash, gen_salt
 import jwt
 from os import getenv
 
-auth = Blueprint(__name__)
+auth = Blueprint("auth", __name__)
 
 jwtkey = getenv("JWT_KEY")
+CLIENT_URL = getenv("CLIENT_URL")
 
-@auth.route("/register")
+@auth.route("/register", methods=["POST"])
+@cross_origin(origins=CLIENT_URL, supports_credentials=True)
 def register():
-    username = request.form["username"]
-    password = request.form["password"]
+    username = request.json["username"]
+    password = request.json["password"]
     hashedPassword = generate_password_hash(password, method="sha512", salt_length=256)
     user = User(username=username, password=hashedPassword)
+    db.session.add(user)
+    db.session.commit()
     return jsonify({"message" : "OK"}, 201)
 
-@auth.route("/login")
+@auth.route("/login", methods=["POST"])
+@cross_origin(origins=CLIENT_URL, supports_credentials=True)
 def login():
-    username = request.form["username"]
-    password = request.form["password"]
+    username = request.json["username"]
+    password = request.json["password"]
     user = User.query.filter_by(username=username).first()
+    print(type(user.to_dict()))
     if not user:
-        return jsonify({"message" : "Authentication Error"}, 400)
+        return jsonify({"message" : "Authentication error"}, 400)
     isPasswordAuth = check_password_hash(user.password, password)
     if not isPasswordAuth:
         return jsonify({"message" : "Authentication Error"}, 400)
-    token = jwt.encode({user: user}, key=jwtkey, algorithm=["HS256"])
+    token = jwt.encode({"user": user.to_dict()}, key=jwtkey, algorithm="HS256")
 
-    return jsonify({"user" : user.to_dict()}, 201)
+    return jsonify({"user" : user.to_dict(), "token" : token}, 201)
     
     
