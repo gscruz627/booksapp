@@ -4,6 +4,7 @@ const initialState = {
 	user: null,
     token: null,
     books: null,
+    categories: null,
 }
 
 export const commonSlice = createSlice({
@@ -21,6 +22,9 @@ export const commonSlice = createSlice({
         setBooks: (state, action) => {
             state.books = action.payload.books
         },
+        setCategories: (state, action) => {
+            state.categories = action.payload.categories
+        },
         setBook: (state, action) => {
             state.books.map( (book) => {
                 if (book.id == action.payload.book.id){
@@ -32,5 +36,5 @@ export const commonSlice = createSlice({
         }
 }});
 
-export const { setLogin, setLogout, setBooks, setBook } = commonSlice.actions;
+export const { setLogin, setLogout, setBooks, setBook, setCategories } = commonSlice.actions;
 export default commonSlice.reducer;

@@ -6,6 +6,7 @@ import LoginView from "../views/LoginView"
 import RegisterView from "../views/RegisterView"
 import Search from "../views/Search"
 import MyBooks from "../views/MyBooks"
+import '../public/generals.css'
 
 function App() {
   const isAuth = useSelector((state) => state.token)

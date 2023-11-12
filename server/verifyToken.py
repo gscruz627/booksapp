@@ -12,8 +12,7 @@ def verifyToken(func):
         if not token:
             return jsonify({"Message" : "Token not found"}, 401)
         try:
-            #Decodes using split
-            data = jwt.decode(token, JWT_KEY)
+            data = jwt.decode(token, JWT_KEY, algorithms="HS256")
         except:
             return jsonify({"Message" : "Token is invalid, authentication error"}, 401)
-    return decorated
+    return func

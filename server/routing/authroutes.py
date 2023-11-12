@@ -36,6 +36,5 @@ def login():
         return jsonify({"message" : "Authentication Error"}, 400)
     token = jwt.encode({"user": user.to_dict()}, key=jwtkey, algorithm="HS256")
 
-    return jsonify({"user" : user.to_dict(), "token" : token}, 201)
-    
+    return jsonify({"user" : user.to_dict(), "token" : token}, 201)   
     

@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import NewBookModal from '../components/NewBookModal'
+import Navbar from '../components/Navbar'
+import SearchBookCard from '../components/SearchBookCard'
 
 const Search = () => {
   const [query, setQuery] = useState("")
@@ -19,33 +21,33 @@ const Search = () => {
     }
   }
   return (
-    <div>
-      <h1>Search</h1>
-      <form method='GET' onSubmit={(e) => handleSubmit(e)}>
-        <input type="text" placeholder='Search...' onChange={(e) => setQuery(e.target.value)} />
-        <button type="submit">GO</button>
-      </form>
-      { selectedBook && (
-        <NewBookModal book={selectedBook} />
-      )}
-      <div className="results">
-        <p>Found: {nfound}</p>
-        {books ? (
-          books.map((book, i) => (
-            <div className="book-item" key={i}>
-              <ul>
-                <li>Title: {book["title"]}</li>
-                <li>Picture: <img id={`${book["isbn"]}sarid`} src={book["isbn"] ? `https://images.isbndb.com/covers/${book["isbn"][0].substring(book["isbn"][0].length - 4, book["isbn"][0].length - 2)}/${book["isbn"][0].substring(book["isbn"][0].length - 2)}/${book["isbn"][0]}.jpg` : '/default.jpg'} width="100" /></li>
-                <li>Author: { book["author_name"] ? book["author_name"].length > 1 ? `${book["author_name"][0]} et. al` : book["author_name"][0] : "Not Found"}</li>
-                <li>ISBN: {book["isbn"] ? book["isbn"][0] : "Not Found"}</li>
-                <li>Year: {book["publish_year"] ? book["publish_year"][0] : "Not Found"}</li>
-                <li><button onClick={(e) => {setSelectedBook(book)}}>ADD THIS BOOK</button></li>
-              </ul>
-            </div>
-          )
-          )) : <p> loading</p>}
+    <>
+      <Navbar></Navbar>
+      <div className="searchbox">
+        <h1 className="primary">Search</h1>
+        <form method='GET' onSubmit={(e) => handleSubmit(e)}>
+          <input className="textbox-main" type="text" placeholder='Search...' onChange={(e) => setQuery(e.target.value)} /><br /><br />
+          <button type="submit" className='main-btn'>GO</button>
+        </form>
+        {selectedBook && (
+          <NewBookModal book={selectedBook} />
+        )}
+        <p style={{
+          textAlign: 'center',
+          margin: 'auto auto',
+          color: 'rgb(36, 36, 36)',
+          fontSize: '18px',
+          margin: '2rem auto'
+        }}>Found: {nfound}</p>
+        <div className="results">
+          {books ? (
+            books.map((book, i) => (
+              <SearchBookCard book={book} i={i} />
+            )
+            )) : <p> loading</p>}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

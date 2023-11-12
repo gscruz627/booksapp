@@ -4,19 +4,19 @@ class Book(db.Model):
     __tablename__ = "books"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
-    picture_url = db.Column(db.String())
-    isbn = db.Column(db.Integer())
-    book_author = db.Column(db.String())
-    year = db.Column(db.String())
-    rate = db.Column(db.Integer, default=0)
-    dateread = db.Column(db.Date) #pass it as a datetime object, build with mydate = date(YYYY,MM,DD)
-    datebegan = db.Column(db.Date) #same
-    readingstatus = db.Column(db.String)
-    category = db.Column(db.String)
-    author_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    picture_url = db.Column(db.String(), nullable=True)
+    isbn = db.Column(db.String(), nullable=True)
+    book_author = db.Column(db.String(), nullable=True)
+    year = db.Column(db.String(), nullable=True)
+    rate = db.Column(db.Integer, nullable=True)
+    dateread = db.Column(db.Date, nullable=True) #pass it as a datetime object, build with mydate = date(YYYY,MM,DD)
+    datebegan = db.Column(db.Date, nullable=True) #same
+    readingstatus = db.Column(db.String, nullable=True)
+    category = db.Column(db.Integer, db.ForeignKey("categories.id"), nullable=True)
+    author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     
 
-    def __init__(self, title, picture_url, isbn, book_author, year, dateread, datebegan, rate, readingstatus, category):
+    def __init__(self, title, picture_url, isbn, book_author, year, dateread, datebegan, rate, readingstatus, category, author_id):
         self.title = title
         self.picture_url = picture_url
         self.isbn = isbn
@@ -27,6 +27,7 @@ class Book(db.Model):
         self.readingstatus = readingstatus
         self.rate = rate
         self.category = category
+        self.author_id = author_id
 
     def to_dict(self):
         return {
@@ -49,6 +50,7 @@ class User(db.Model):
     username = db.Column(db.String())
     password = db.Column(db.String())
     books = db.relationship("Book", backref="author", lazy="dynamic")
+    categories = db.relationship("Category", backref="author", lazy="dynamic")
 
     def __init__(self, username, password):
         self.username = username
@@ -59,4 +61,25 @@ class User(db.Model):
             "id" : self.id,
             "username" : self.username,
             "password" : self.password,
+        }
+    
+class Category(db.Model):
+    __tablename__ = "categories"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(), nullable=False)
+    rows = db.Column(db.Integer, default=1)
+    columns = db.Column(db.Integer, default=4)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    books = db.relationship("Book", backref="category", lazy="dynamic")
+
+    def __init__(self, name, author_id):
+        self.name = name,
+        self.author_id = author_id
+
+    def to_dict(self):
+        return {
+            "id" : self.id,
+            "name" : self.name,
+            "rows" : self.rows,
+            "columns" : self.columns
         }
