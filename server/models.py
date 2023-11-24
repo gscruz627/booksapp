@@ -12,11 +12,13 @@ class Book(db.Model):
     dateread = db.Column(db.Date, nullable=True) #pass it as a datetime object, build with mydate = date(YYYY,MM,DD)
     datebegan = db.Column(db.Date, nullable=True) #same
     readingstatus = db.Column(db.String, nullable=True)
-    category = db.Column(db.Integer, db.ForeignKey("categories.id"), nullable=True)
+    ownercategory_id = db.Column(db.Integer, db.ForeignKey("categories.id"), nullable=True)
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    
+    spinecolor = db.Column(db.String(), default="FFFFFF")
+    spinetext = db.Column(db.String(), default="000000")
+    textcategory = db.Column(db.String())
 
-    def __init__(self, title, picture_url, isbn, book_author, year, dateread, datebegan, rate, readingstatus, category, author_id):
+    def __init__(self, title, picture_url, isbn, book_author, year, dateread, datebegan, rate, readingstatus, category, author_id, spinecolor, spinetext):
         self.title = title
         self.picture_url = picture_url
         self.isbn = isbn
@@ -28,6 +30,9 @@ class Book(db.Model):
         self.rate = rate
         self.category = category
         self.author_id = author_id
+        self.textcategory = category
+        self.spinecolor =  spinecolor,
+        self.spinetext = spinetext
 
     def to_dict(self):
         return {
@@ -41,7 +46,9 @@ class Book(db.Model):
             "datebegan" : self.datebegan,
             "readingstatus" : self.readingstatus,
             "rate" : self.rate,
-            "category" : self.category
+            "category" : self.textcategory,
+            "spinecolor": self.spinecolor,
+            "spinetext":self.spinetext
         }
     
 class User(db.Model):
@@ -70,7 +77,7 @@ class Category(db.Model):
     rows = db.Column(db.Integer, default=1)
     columns = db.Column(db.Integer, default=4)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    books = db.relationship("Book", backref="category", lazy="dynamic")
+    books = db.relationship("Book", backref="ownercategory", lazy="dynamic")
 
     def __init__(self, name, author_id):
         self.name = name,

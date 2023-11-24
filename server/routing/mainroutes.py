@@ -5,6 +5,7 @@ from models import User,Book,Category
 from verifyToken import verifyToken
 from os import getenv
 from datetime import datetime
+from urllib.parse import unquote
 
 main = Blueprint("main", __name__)
 CLIENT_URL = getenv("CLIENT_URL")
@@ -23,14 +24,16 @@ def createBook():
     readingstatus = request.json["readingstatus"]
     year = request.json["year"]
     category = request.json["category"]
+    spinecolor = request.json["spinecolor"]
+    spinetext = request.json["spinetext"]
     dateread = None
     datebegan = None
     if readingstatus not in ["Read", "Want to Read", "Reading"]:
         return jsonify({"message" : "Error: Wrong.formatting"}, 400)
     if readingstatus in ["Read", "Reading"]:
-        dateread = request.json["dateread"]
-        datebegan = request.json["datebegan"]
-    book = Book(title=title, book_author=author, isbn=isbn, picture_url=image, rate=rate, readingstatus=readingstatus, dateread=datetime.strptime(dateread, '%Y-%m-%d'), datebegan=datetime.strptime(datebegan, '%Y-%m-%d'), year=year, category=category, author_id=author_id)
+        dateread = datetime.strptime(request.json["dateread"], '%Y-%m-%d')
+        datebegan = datetime.strptime(request.json["datebegan"], '%Y-%m-%d')
+    book = Book(title=title, book_author=author, isbn=isbn, picture_url=image, rate=rate, readingstatus=readingstatus, dateread=dateread, datebegan=datebegan, year=year, category=category, author_id=author_id, spinecolor=spinecolor, spinetext=spinetext)
     db.session.add(book)
     db.session.commit()
     return jsonify({"message" : "OK"}, 201)
@@ -47,14 +50,17 @@ def returnBook(id):
 @main.route("/books/<int:userId>")
 @cross_origin(origins=CLIENT_URL, supports_credentials=True)
 @verifyToken
-def returnAllBooks(userId):
-    books = Book.query.filter_by(author_id=userId)
+def returnBooks(userId):
+    if request.args.get('category'):
+        books = Book.query.filter_by(author_id=userId, textcategory=request.args.get('category'))
+    else:
+        books = Book.query.filter_by(author_id=userId)
     return jsonify({"books" : list(map(lambda book: book.to_dict(), books))}, 200)
 
 @main.route("/editbook/<int:id>", methods=["POST"])
 @verifyToken
 @cross_origin(origins=CLIENT_URL, supports_credentials=True)
-def editBook(id, userId):
+def editBook(id):
     userId = request.json["userId"]
     book = Book.query.filter_by(id=id).first()
     if book.author_id != userId:
@@ -62,14 +68,15 @@ def editBook(id, userId):
     editinfo = request.json["info"]
     editinfo = dict(editinfo)
     for k,v in editinfo.items():
-        book[k] = v
-    db.commit()
+        setattr(book,k,v)
+    db.session.commit()
+    book = Book.query.filter_by(id=id).first()
     return jsonify({"book" : book.to_dict()}, 200)
 
 @main.route("/deletebook/<int:id>", methods=["DELETE"])
 @cross_origin(origins=CLIENT_URL, supports_credentials=True)
 @verifyToken
-def deleteBook(id, userId):
+def deleteBook(id):
     userId = request.json["userId"]
     book = Book.query.filter_by(id=id).first()
     if book.author_id != userId:
@@ -78,7 +85,7 @@ def deleteBook(id, userId):
     db.commit()
     return jsonify({"message" : "OK"}, 200)
 
-@main.route("/createcategory", methods=["POST"])
+@main.route("/newcategory", methods=["POST"])
 @cross_origin(origins=CLIENT_URL, supports_credentials=True)
 @verifyToken
 def createCategory():
@@ -89,18 +96,53 @@ def createCategory():
     db.session.commit()
     categories = Category.query.filter_by(author_id=user_id)
     return jsonify({"categories": list(map(lambda category: category.to_dict(), categories))}, 201)
-# register
-# login
-# create a book
-# return i.jsonation of book
-#EDIT
-# edit rate
-# edit title
-# edit image
-# edit author
-# edit isbn
-# edit dates
-# edit read status
-# delete a book
-# search results
-# wrap everything in try except
+
+@main.route("/categories/<int:user_id>")
+@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@verifyToken
+def categories(user_id):
+    categories = Category.query.filter_by(author_id=user_id)
+    if not categories:
+        return []
+    return jsonify({"categories" : list(map(lambda category: category.to_dict(), categories))}, 200)
+
+@main.route("/addcols", methods=["POST"])
+@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@verifyToken
+def addCols():
+    id = request.json["id"]
+    category = Category.query.filter_by(id=id).first()
+    category.columns += 1
+    db.session.commit()
+    print(category)
+    return jsonify({"category": category.to_dict()}, 200)
+
+@main.route("/delcols", methods=["POST"])
+@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@verifyToken
+def delCols():
+    id = request.json["id"]
+    category = Category.query.filter_by(id=id).first()
+    category.columns -= 1
+    db.session.commit()
+    return jsonify({"category": category.to_dict()}, 200)
+
+@main.route("/addrows", methods=["POST"])
+@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@verifyToken
+def addRows():
+    id = request.json["id"]
+    category = Category.query.filter_by(id=id).first()
+    category.rows += 1
+    db.session.commit()
+    return jsonify({"category": category.to_dict()}, 200)
+
+@main.route("/delrows", methods=["POST"])
+@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@verifyToken
+def delRows():
+    id = request.json["id"]
+    category = Category.query.filter_by(id=id).first()
+    category.rows -= 1
+    db.session.commit()
+    return jsonify({"category": category.to_dict()}, 200)
