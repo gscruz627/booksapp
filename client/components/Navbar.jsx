@@ -8,32 +8,31 @@ const Navbar = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     return (
-        <nav>
-            <ul>
-                <h1 className="primary">BooksApp</h1>
-            </ul>
-            <ul>
-                {user && (
-                    <li>
-                        <button className="alt-btn" onClick={() => navigate("/mybooks")}>My Collection</button>
-                    </li>
-                )}
-                <li>
+        <div>
+            <nav className="primary-nav">
+                <ul>
+                    <h1 style={{ cursor: "pointer" }} onClick={() => navigate("/")}><i class="fa-solid fa-book-open"></i> BooksApp</h1>
+                </ul>
+            </nav >
+            <nav className="secondary-nav">
+                <ul>
+                    <li onClick={() => navigate("/")}>Home</li>
                     {user ? (
-                        <button className="alt-btn">{user.username}</button>
+                        <>
+                            <li onClick={() => navigate("/library")}>Library</li>
+                            <li onClick={() => navigate("/search")}>Search</li>
+                            <li>Profile ({user.username})</li>
+                            <li onClick={() => dispatch(setLogout())}>Log Out</li>
+                        </>
                     ) : (
-                        <button className="main-btn">Log In</button>
+                        <>
+                            <li onClick={() => navigate("/login")}>Login</li>
+                            <li onClick={() => navigate("/register")}>Create An Account</li>
+                        </>
                     )}
-                </li>
-                <li>
-                    {user ? (
-                        <button className="main-btn" onClick={() => dispatch(setLogout())}>Log Out</button>
-                    ) : (
-                        <button className="main-btn">Register</button>
-                    )}
-                </li>
-            </ul>
-        </nav >
+                </ul>
+            </nav>
+        </div>
     )
 }
 

@@ -26,15 +26,16 @@ export const commonSlice = createSlice({
             state.categories = action.payload.categories
         },
         setBook: (state, action) => {
-            state.books.map( (book) => {
-                if (book.id == action.payload.book.id){
-                    return action.payload.book
-                } else {
-                    return book
-                }
-            })
+            state.books = state.books.map((book) =>
+              book.id === action.payload.book.id ? action.payload.book : book
+            );
+        },
+        setCategory: (state, action) => {
+            state.categories = state.categories.map( (category) => 
+                category.id === action.payload.category.id ? action.payload.category : category
+            );
         }
 }});
 
-export const { setLogin, setLogout, setBooks, setBook, setCategories } = commonSlice.actions;
+export const { setLogin, setLogout, setBooks, setBook, setCategories, setCategory } = commonSlice.actions;
 export default commonSlice.reducer;

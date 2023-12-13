@@ -28,7 +28,6 @@ def login():
     username = request.json["username"]
     password = request.json["password"]
     user = User.query.filter_by(username=username).first()
-    print(type(user.to_dict()))
     if not user:
         return jsonify({"message" : "Authentication error"}, 400)
     isPasswordAuth = check_password_hash(user.password, password)

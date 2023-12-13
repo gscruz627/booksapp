@@ -22,13 +22,14 @@ const Search = () => {
   }
   return (
     <>
-      <Navbar></Navbar>
+      <Navbar />
       <div className="searchbox">
-        <h1 className="primary">Search</h1>
+        <h1>Search</h1>
         <form method='GET' onSubmit={(e) => handleSubmit(e)}>
           <input className="textbox-main" type="text" placeholder='Search...' onChange={(e) => setQuery(e.target.value)} /><br /><br />
           <button type="submit" className='main-btn'>GO</button>
         </form>
+        </div>
         {selectedBook && (
           <NewBookModal book={selectedBook} />
         )}
@@ -38,15 +39,14 @@ const Search = () => {
           color: 'rgb(36, 36, 36)',
           fontSize: '18px',
           margin: '2rem auto'
-        }}>Found: {nfound}</p>
+        }}>Found: {books && books.length}</p>
         <div className="results">
           {books ? (
             books.map((book, i) => (
               <SearchBookCard book={book} i={i} />
             )
-            )) : <p> loading</p>}
+            )) : <p> Loading...</p>}
         </div>
-      </div>
     </>
   )
 }

@@ -1,22 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Merriweather&display=swap');
-
 :root {
-    --cbrown: rgb(36, 36, 36)
+    --blue: rgb(116, 170, 251)
 }
-
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
     outline: none;
     border: none;
-    font-family: Merriweather;
+    font-family: Poppins;
 }
-hr{
-    color:rgb(156, 156, 156);
-    width:100%;
+
+hr {
+    color: rgb(156, 156, 156);
+    width: 100%;
     border-top: 1px solid;
 }
+
 li,
 ul {
     list-style-type: none;
@@ -27,32 +27,54 @@ button {
     cursor: pointer;
 }
 
-nav {
+nav.primary-nav {
+    background-color: var(--blue);
     padding: 2rem 3rem;
     display: flex;
     justify-content: space-between;
+    color: #FFF;
+}
+nav.primary-nav h1{
+    margin-left: 66px;
 }
 
-nav li {
+nav.primary-nav li {
     margin: auto 1rem;
 }
 
-.primary {
-    color: var(--cbrown)
+nav.secondary-nav{
+    background-color:rgb(241, 241, 241);
+    height: 50px;
+    display:flex;
+    justify-content: start;
+    align-items: center;
 }
+nav.secondary-nav ul{
+    margin-left:100px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+nav.secondary-nav li{
+    display:flex;
+    align-items: center;
+    margin: auto 1rem;
+    height:50px;
+    cursor:pointer;
 
-.secondary {
-    color: cornsilk;
+}
+nav.secondary-nav li:hover{
+    font-weight:bolder;
+    color: var(--blue);
+    border-bottom:2px solid var(--blue)
 }
 
 .main-btn {
-    background-color: var(--cbrown);
+    background-color: #4b4b4b;
     color: white;
     border-radius: 5px;
-    font-weight: bolder;
-    box-shadow: inset 2px -2px 25px rgb(36, 36, 36);
     text-shadow: 0.75px 0.75px 0.1px rgb(112, 112, 112);
-    padding: 0.75rem 1.5rem;
+    padding: 0.5rem 2rem;
     font-size: 18px;
 }
 
@@ -71,115 +93,253 @@ nav h1 {
 }
 
 .searchbox {
+    margin: 4rem auto;
     text-align: center;
 }
 
 .searchbox h1 {
+    color:#3e3e3e;
     font-size: 36px;
     margin: 1rem auto;
 }
 
 .textbox-main {
-    border-radius: 5px;
     padding: 1rem 2rem;
     width: 60%;
     margin: auto auto;
-    box-shadow: inset 1px 1px 5px rgb(164, 164, 164);
-    background-color: rgb(208, 208, 208);
-    color: var(--cbrown);
-    font-weight: bolder;
+    border-bottom:1px solid #3e3e3e;
     font-size: 14px;
 }
-
+.textbox-main:focus{
+    border: 1px solid var(--blue)
+}
 .textbox-main::placeholder {
     color: var(--cbrown)
 }
-
-.results {
+.results{
     display: grid;
-    grid-template-columns: 100%;
-    row-gap: 5rem;
-    width: 75%;
+    grid-template-columns:auto auto auto;
+    width:60%;
+    margin: auto auto;
+    row-gap:5rem;
+    text-align: center;
+}
+
+.resultbook{
+    display:grid;
+    grid-template-rows: 60% 40%;
+    text-align: center;
+}
+.resultbook section h2{
+    font-weight:350;
+    font-size:20px;
+}
+.resultbook p{
+    font-size:14px;
+}
+.resultbook > img{
+    min-width:100px;
+    height:150px;
+    margin: auto auto;
+}
+/* NEW BOOK MODAL */
+.newbookmodal {
+    background-color: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 3rem 25%;
+    overflow-y: scroll;
+}
+
+.newbook-inner {
+    background-color: white;
+    border-radius: 5px;
+}
+
+.newbook-inner > section{
+    background-color: var(--blue);
+    width:100%;
+    margin: auto auto;
+    padding: 1rem;
+    font-size:28px;
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+    color:#FFF;
+}
+.newbook-inner form{
+    padding: 3rem 2rem;
+    font-size: 18px;
+}
+.form-dual{
+    display:grid;
+    grid-template-columns: 15% 35% 15% 35%;
+    margin: 0 auto 1rem 0;
+}
+.form-read-status{
+    display:flex;
+    justify-content: space-between;
+    margin:1rem auto;
+}
+.form-date{
+    display:flex;
+    justify-content: center;
+    margin:1em auto;
+}
+.lower-panel{
+    display:grid;
+    grid-template-columns: auto auto;
+}
+.lower-p-left{
+    height:200px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.lower-p-left img{
+    height:100%;
+    max-width:200px;
+    width:auto;
+    object-fit: fill;
+    margin-right:1rem;
+}
+.newbook-inner form input:not([type='color']), select{
+    padding: 0.5rem 1rem;
+}
+.library-home {
+    width: 90%;
+    display: grid;
+    grid-template-columns: 60% 40%;
     margin: auto auto;
 }
 
-/* each card itself */
-.results>div {
-    display: grid;
-    grid-template-columns: 30% 70%;
-    height: 10rem;
+.library-container {
+    padding: 1rem;
+    text-align: center;
 }
 
-/* image inside card */
-.results>div img {
-    width: 100%;
-    height: 12rem;
-    object-fit: contain;
+.bookshelf {
+    background-color: #AB7038;
+    border: 6px solid #1E1A18;
+    margin: auto auto;
+    padding: auto 15px;
 }
 
-/* subcard */
-.results>div>div {
+.bookshelf-row {
+    border: 6px solid #1E1A18;
+    background-color: #E29964;
+    margin: 15px auto;
+    display: grid
+}
+
+.book {
+    width: 30px;
+    height: 100%;
+    border-left: 6px solid #1E1A18;
+    overflow-x: visible;
+    overflow-y: visible;
+    cursor: pointer;
+    writing-mode: vertical-rl;
+    rotate: 180deg;
     text-align: left;
+    padding-top: 5px;
+    position:relative;
 }
 
-.results>div>div>* {
-    margin: 0.5rem auto;
+.book p {
+    font-weight: bolder;
 }
 
-/* NEW BOOK MODAL */
-.newbookmodal{
-    background-color: rgba(0,0,0,0.7);
-    position: fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    padding: 2rem 7rem;
-    overflow-y: scroll;
+.modal-color {
+    text-align: center;
 }
-.newbookmodal > div{
-    background-color: white;
-    border-radius:5px;
-    padding:2rem 7rem;
+
+.bookshelf-row div:not(.book):not(.triangle):not(.book-hover-info):hover{
+    background-color: rgb(149, 108, 108);
 }
-.newbookmodal > div > form{
-    font-size: 18px;
-    display: grid;
-    grid-template-columns: 50% 50%;
+
+.bookshelf-row div:not(.book):not(.book-hover-info):last-child {
+    width: 24px !important;
 }
-.newbookmodal > div > form > * {
+
+.triangle {
+    width: 0;
+    height: 0;
+    border-left: 26px solid transparent;
+    border-bottom: 26px solid rgba(128, 0, 128, 0.299);
+    background-color:transparent;
+    margin-right: -21px;
+    margin-top: 108px;
+}
+
+.library-card * {
+    text-align: center !important;
+}
+
+.book .book-hover-info {
+    writing-mode:initial;
+    rotate:180deg;
+    visibility: hidden;
+    width: 200px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 1rem;
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    right:-360%;
+    margin-left: -60px;
+}
+.book .book-hover-info::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+ 
+.book:hover .book-hover-info {
+    visibility: visible;
+}
+.form-container{
+    text-align: center;
+    width: min(100%, 600px);
+    max-width: 600px;
+    margin: 2rem auto;
+}
+.form-container form{
+    margin-top:2rem;
+}
+.form-container > form >*{
     margin: 1rem auto;
 }
-.newbookmodal > div > form > section{
-    background-color: rgb(223, 222, 222);
-    border-radius: 5px;
-    padding: 2rem 4rem;
-    text-align: left;
+.error-box{
+    width:60%;
+    margin: 1rem auto;
+    border: 1px solid darkred;
+    background-color:rgb(255, 227, 231);
+    color: darkred;
+    padding:1rem 2rem;
 }
-
-.newbookmodal > div > form > section >*{
-    margin: 0.75rem auto;
-}
-
-.newbookmodal > div > form > section > input[type=date]{
-    padding:0.5rem 0.75rem;
-    border-radius:5px;
-}
-/* each star */
 .rate > div{
     display:inline;
 }
 #rating_bar {
-    width:100px;
-    height:100px;
-    display:inline-block;
     display:inline;
 }
 #rating_bar > span:before {
     content:"\2605";
     color: #c7c5c5;
     cursor:pointer;
-    font-size:3em;
+    font-size:2em;
 }
 #rating_bar:hover > span:before {
     color: rgb(255, 170, 24);
@@ -188,53 +348,9 @@ nav h1 {
 #rating_bar > span:hover ~ span:before {
     color: #c7c5c5;
 }
-.add-image{
-    text-align: center;
-    grid-column-start: 1;
-    grid-column-end:3;
+.inner-edit form{
+    padding: 1rem 0rem;
 }
-.add-image >*{
-    margin: 0.5rem auto;
-}
-.library-home{
-    border:1px solid red;
-    width:90%;
-    display:grid;
-    grid-template-columns: 60% 40%;
-    margin: auto auto;
-}
-.library-container{
-    border:1px solid red;
-    padding:1rem;
-    text-align: center;
-    overflow-x:auto;
-}
-.bookshelf{
-    background-color: #AB7038;
-    border: 6px solid #1E1A18;
-    margin: auto auto;
-    padding: auto 15px;
-}
-.bookshelf-row{
-    border:6px solid #1E1A18;
-    background-color: #E29964;
-    margin: 15px auto;
-    display:grid
-}
-.book{
-    width:30px;
-    height:100%;
-    border-right:6px solid #1E1A18;
-    overflow-x:hidden;
-    background-color: steelblue;
-    cursor:pointer;
-}
-.book p{
-    rotate: 270deg;
-    margin-top:460%;
-    font-weight: bolder;
-    text-shadow: -2px -1px 0.5px #1E1A18;
-    color:white;
-}
-.book p:hover{
+.inner-edit > section {
+    padding: 0.15rem 0.5rem;
 }

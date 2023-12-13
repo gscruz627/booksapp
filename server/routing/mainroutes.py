@@ -31,7 +31,8 @@ def createBook():
     if readingstatus not in ["Read", "Want to Read", "Reading"]:
         return jsonify({"message" : "Error: Wrong.formatting"}, 400)
     if readingstatus in ["Read", "Reading"]:
-        dateread = datetime.strptime(request.json["dateread"], '%Y-%m-%d')
+        if readingstatus == "Read":
+            dateread = datetime.strptime(request.json["dateread"], '%Y-%m-%d')
         datebegan = datetime.strptime(request.json["datebegan"], '%Y-%m-%d')
     book = Book(title=title, book_author=author, isbn=isbn, picture_url=image, rate=rate, readingstatus=readingstatus, dateread=dateread, datebegan=datebegan, year=year, category=category, author_id=author_id, spinecolor=spinecolor, spinetext=spinetext)
     db.session.add(book)
@@ -78,12 +79,17 @@ def editBook(id):
 @verifyToken
 def deleteBook(id):
     userId = request.json["userId"]
+    currentCategory = request.json["category"]
     book = Book.query.filter_by(id=id).first()
     if book.author_id != userId:
         return jsonify({"message" : "Authentication Error"}, 401)
-    book.delete()
-    db.commit()
-    return jsonify({"message" : "OK"}, 200)
+    db.session.delete(book)
+    db.session.commit()
+    if currentCategory:        
+        books = Book.query.filter_by(author_id=userId, textcategory=currentCategory)
+    else:
+        books = Book.query.filter_by(author_id=userId)
+    return jsonify({"books" : list(map(lambda book: book.to_dict(), books))}, 200)
 
 @main.route("/newcategory", methods=["POST"])
 @cross_origin(origins=CLIENT_URL, supports_credentials=True)
@@ -96,6 +102,33 @@ def createCategory():
     db.session.commit()
     categories = Category.query.filter_by(author_id=user_id)
     return jsonify({"categories": list(map(lambda category: category.to_dict(), categories))}, 201)
+
+@main.route("/editcategory/<int:id>", methods=["POST"])
+@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@verifyToken
+def editCategory(id):
+    category = Category.query.filter_by(id=id).first()
+    userId = request.json["userId"]
+    newname = request.json["newname"]
+    if category.author_id != userId:
+        return jsonify({"message" : "Authentication Error"}, 403)
+    category.name = newname
+    db.session.commit()
+    category = Category.query.filter_by(id=id).first()
+    return jsonify({"category": category.to_dict()}, 200)
+
+@main.route("/deletecategory/<int:id>", methods=["DELETE"])
+@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@verifyToken
+def deleteCategory(id):
+    userId = request.json["userId"]
+    category = Category.query.filter_by(id=id).first()
+    if category.author_id != userId:
+        return jsonify({"message" : "Authentication Error"}, 401)
+    db.session.delete(category)
+    db.session.commit()
+    categories = Category.query.filter_by(author_id=userId)
+    return jsonify({"categories" : list(map(lambda category: category.to_dict(), categories))}, 200)
 
 @main.route("/categories/<int:user_id>")
 @cross_origin(origins=CLIENT_URL, supports_credentials=True)
