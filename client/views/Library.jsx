@@ -7,7 +7,7 @@ import { useMediaQuery } from '../hooks/useMediaQuery';
 import Footer from '../components/Footer';
 
 
-export const Library = () => {
+const Library = () => {
 
   const SERVER_URL = import.meta.env["VITE_SERVER_URL"];
   const [, updateState] = React.useState();
@@ -438,3 +438,5 @@ export const Library = () => {
     </>
   )
 }
+
+export default Library
