@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import NewBookModal from '../components/NewBookModal'
 import Navbar from '../components/Navbar'
 import SearchBookCard from '../components/SearchBookCard'
+import Footer from '../components/Footer'
 
 const Search = () => {
   const [query, setQuery] = useState("")
@@ -47,6 +48,7 @@ const Search = () => {
             )
             )) : <p> Loading...</p>}
         </div>
+        <Footer/>
     </>
   )
 }

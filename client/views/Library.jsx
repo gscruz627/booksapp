@@ -3,7 +3,8 @@ import Navbar from '../components/Navbar'
 import { useSelector, useDispatch } from 'react-redux';
 import { setBook, setBooks, setCategories } from '../store';
 import { setCategory as reduxSetCategory } from "../store";
-import NewBookModal from '../components/NewBookModal';
+import { useMediaQuery } from '../hooks/useMediaQuery';
+import Footer from '../components/Footer';
 
 
 export const Library = () => {
@@ -15,10 +16,12 @@ export const Library = () => {
   const books = useSelector((state) => state.books)
   let categories = useSelector((state) => state.categories)
   const dispatch = useDispatch()
+  const [currentWidth, setCurrentWidth] = useState(window.screen.width)
   const [category, setCategory] = useState("All");
   const [categoryIndex, setCategoryIndex] = useState(null)
   const [currentBook, setCurrentBook] = useState(null)
-  const [currentMatrix, setCurrentMatrix] = useState(Array.from({ length: category == "All" ? 3 : category["rows"] }, () => Array(category == "All" ? 12 : category["columns"]).fill(null)))
+  const isSmall = useMediaQuery("sm")
+  const [currentMatrix, setCurrentMatrix] = useState(Array.from({ length: category == "All" ? 3 : category["rows"] }, () => Array(category == "All" ? (isSmall ? 8 : 12) : category["columns"]).fill(null)))
   const [title, setTitle] = useState(null)
   const [author, setAuthor] = useState(null)
   const [year, setYear] = useState(null)
@@ -31,8 +34,7 @@ export const Library = () => {
   const [changeCategory, setChangeCategory] = useState(null)
   const [bgColor, setBgColor] = useState(null)
   const [txtColor, setTxtColor] = useState(null)
-
-
+  let cols = (window.innerWidth < 768) ? 8 : 12
   useEffect(() => {
     if (currentBook) {
       setTitle(currentBook["title"])
@@ -49,6 +51,7 @@ export const Library = () => {
       setTxtColor(currentBook["spinetext"])
     }
   }, [currentBook])
+
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -84,6 +87,7 @@ export const Library = () => {
     const requestParsed = await request.json()
     if (requestParsed) {
       dispatch(setBook({ book: requestParsed[0]["book"] }))
+      setCurrentBook(null)
       alert("Book saved successfully!")
     } else {
       alert("Request failed")
@@ -135,6 +139,10 @@ export const Library = () => {
     }
   }
   const handleDeleteBook = async () => {
+    const afirm = confirm("Are you sure you want to delte this book?")
+    if (!afirm) {
+      return;
+    }
     const request = await fetch(`${SERVER_URL}/deletebook/${currentBook["id"]}`, {
       method: "DELETE",
       headers: {
@@ -166,7 +174,6 @@ export const Library = () => {
       })
       const requestParsed = await request.json()
       if (requestParsed) {
-        console.log(requestParsed)
         dispatch(reduxSetCategory({ category: requestParsed[0]["category"] }))
         setCategory(requestParsed[0]["category"]["name"])
         forceUpdate()
@@ -177,6 +184,10 @@ export const Library = () => {
     return
   }
   const handleDeleteCategory = async () => {
+    const afirm = confirm("Are you sure you will delete this category? (Books will NOT be deleted)")
+    if (!afirm) {
+      return;
+    }
     const request = await fetch(`${SERVER_URL}/deletecategory/${categories[categoryIndex]["id"]}`, {
       method: "DELETE",
       headers: {
@@ -202,45 +213,68 @@ export const Library = () => {
   }, [])
   useEffect(() => {
     getBooks()
+    loadNewMatrix()
   }, [category])
   useEffect(() => {
-    //console.log(currentMatrix)
+    console.log("NOVEN 9000")
   }, [currentMatrix])
   useEffect(() => {
     loadNewMatrix();
   }, [books])
+
+  useEffect(() => {
+    let timeoutId;
+
+    const handleResize = () => {
+      // Clear the previous timeout
+      clearTimeout(timeoutId);
+
+      // Set a new timeout
+      timeoutId = setTimeout(() => {
+        const screenWidth = window.innerWidth;
+        loadNewMatrix()
+      }, 300); // Adjust the delay as needed
+    };
+
+    // Add event listener for window resize
+    window.addEventListener('resize', handleResize);
+
+    // Remove event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+
   const loadNewMatrix = async () => {
-    // Determine rows:
-    let numrows = Math.ceil(books.length / 12)
+    if (window.innerWidth < 768) {
+      cols = 8
+    } else {
+      cols = 12
+    }
+    let numrows = Math.ceil(books.length / cols)
+    console.log(numrows)
     if (books.length === 0) { numrows = 1 }
-    setCurrentMatrix(Array.from({ length: (category == "All") ? 3 : numrows }, () => Array(12).fill(null)))
+    setCurrentMatrix(Array.from({ length: (category == "All") ? 3 : numrows }, () => Array(cols).fill(null)))
 
     // Fix general index issue (Don't Touch it works!)
     let genIdx = 0
     if (category === "All") {
-      genIdx = -36;
+      genIdx = 0;
     } else {
-      genIdx = 0 - (numrows * 12)
+      genIdx = 0 - (numrows * cols)
     }
-    const initialMatrix = Array.from({ length: (category == "All") ? 3 : numrows }, () => Array(12).fill(null))
-
-    //---------------------
-    const dontdeletethisoneforsomereasonifyoutakethisoneoutitdontworknomore = initialMatrix.map((row) =>
-      row.map((col) => {
-        const value = books[genIdx] ? books[genIdx] : "";
-        genIdx += 1;
-        return value;
-      })
-    );
-    //----------------------
-
-    const a = initialMatrix.map((row, rowIndex) =>
+    const initialMatrix = Array.from({ length: (category == "All") ? 3 : numrows }, () => Array(cols).fill(null))
+    let a = initialMatrix.map((row, rowIndex) =>
       row.map((col, colIndex) => {
         const value = books[genIdx]
         genIdx += 1
-        return value ?? ""
+        return value ? value : ""
       }))
+
     setCurrentMatrix(a)
+
+
   }
   return (
     <>
@@ -265,11 +299,11 @@ export const Library = () => {
         {
           (category !== "All") &&
           <>
-            <i class="fa-solid fa-pencil" onClick={() => handleEditCategory()} style={{ color: "orange", cursor: "pointer" }}></i>&nbsp;
-            <i class="fa-solid fa-trash" onClick={() => handleDeleteCategory()} style={{ color: 'darkred', cursor: "pointer" }}></i> &nbsp;
+            <i className="fa-solid fa-pencil" onClick={() => handleEditCategory()} style={{ color: "orange", cursor: "pointer" }}></i>&nbsp;
+            <i className="fa-solid fa-trash" onClick={() => handleDeleteCategory()} style={{ color: 'darkred', cursor: "pointer" }}></i> &nbsp;
           </>
         }
-        <i class="fa-solid fa-plus" onClick={() => handleAddCategory()} style={{ color: 'darkgreen', cursor: "pointer" }}></i>
+        <i className="fa-solid fa-plus" onClick={() => handleAddCategory()} style={{ color: 'darkgreen', cursor: "pointer" }}></i>
         &nbsp;&nbsp;
         <i onClick={() => {
           if (category === "All") {
@@ -288,13 +322,13 @@ export const Library = () => {
       <section className="library-home">
         <div className="library-container">
           {currentMatrix &&
-            <div className="bookshelf" style={{ width: "408px" }}>
+            <div className="bookshelf" style={{ width: `${34 * cols}px` }}>
               {[...Array((category == "All") ? 3 : currentMatrix.length)].map((e, row) => (
-                <article className="bookshelf-row" style={{ height: "150px", width: "366px", gridTemplateColumns: `${"auto ".repeat(12)}` }}>
-                  {[...Array(12)].map((e, col) => (
+                <article className="bookshelf-row" style={{ height: "150px", width: `${30.5 * cols}px`, gridTemplateColumns: `${"auto ".repeat(cols)}` }}>
+                  {[...Array(cols)].map((e, col) => (
                     (currentMatrix[row] && currentMatrix[row][col]) ? (
                       <div className="book" style={{ color: `${currentMatrix[row][col]["spinetext"]}`, backgroundColor: `${currentMatrix[row][col]["spinecolor"]}` }} onClick={() => setCurrentBook(currentMatrix[row][col])}>
-                        <p>{currentMatrix[row][col]["title"].length > 12 ? `${currentMatrix[row][col]["title"].substring(0, 10)}...` : currentMatrix[row][col]["title"]}</p>
+                        <p>{currentMatrix[row][col]["title"].length > cols ? `${currentMatrix[row][col]["title"].substring(0, 10)}...` : currentMatrix[row][col]["title"]}</p>
                         <div className="triangle" style={{ display: (currentMatrix[row][col]["readingstatus"] === "Want to Read") ? "block" : "none" }}></div>
                         <div className="book-hover-info">
                           <img src={currentMatrix[row][col]["picture_url"]} width="100"></img>
@@ -310,12 +344,12 @@ export const Library = () => {
             </div>}
         </div>
         <div className="library-card">
-          { (currentBook && title) ? (
+          {(currentBook && title) ? (
             <div className='newbook-inner inner-edit'>
               <section>
                 <h1></h1>
-                <h1><i class="fa-solid fa-pencil"></i>&nbsp; Edit book </h1>
-                <h1 style={{ fontSize: "48px", marginBottom: "8px", cursor: "pointer" }} onClick={() => setAddBook(false)}>&times;</h1>
+                <h1><i className="fa-solid fa-pencil"></i>&nbsp; Edit book </h1>
+                <h1 style={{ fontSize: "36px", cursor: "pointer", color: "darkred" }} onClick={() => handleDeleteBook()}><i className="fa-solid fa-trash"></i></h1>
               </section>
               <hr />
               <form method="POST" onSubmit={(e) => handleSubmit(e)}>
@@ -333,11 +367,20 @@ export const Library = () => {
                   <input type="text" className="textbox-main" id="isbn" value={isbn} onChange={(e) => setIsbn(e.target.value)} />
 
                   <label htmlFor="category">Category: </label>
-                  <select name="category" id="category" onChange={(e) => setCategory(e.target.value)}>
-                    {categories.length > 0 &&
-                      (categories.map((category, i) => (
-                        <option key={i} value={category["name"]}>{category["name"]}</option>
-                      )))
+                  <select name="category" id="category" onChange={(e) => setChangeCategory(e.target.value)}>
+                    {(categories.length > 0) &&
+                      (
+                        <>
+                          <option key={99999999999999} value={""}></option>
+                          {categories.map((category, i) => (
+                          (category["name"] === currentBook.category) ?
+                          (
+                            <option key={i} value={currentBook.category} selected>{category["name"]}</option>
+                          ) : (
+                          <option key={i} value={category["name"]} >{category["name"]}</option>
+                          )
+                          ))}
+                      </>)
                     }
                   </select>
                 </div>
@@ -372,8 +415,8 @@ export const Library = () => {
 
                   <div className="lower-p-left">
                     <img src={currentImageUrl ? currentImageUrl : "/default.jpg"} width="200" />
-                    <div className="book" style={{ border: "6px solid #1E1A18", height: "100%", color: txtColor, backgroundColor: bgColor }}>
-                      <p style={{marginRight:"-0.2rem"}}>{title.length > 20 ? `${title.substring(0, 20)}...` : title}</p>
+                    <div className="book" style={{ border: "6px solid #1E1A18", height: "100%", color: txtColor, backgroundColor: bgColor, width: "30px" }}>
+                      <p style={{ marginRight: "-0.2rem" }}>{title.length > 12 ? `${title.substring(0, 12)}...` : title}</p>
                     </div>
                   </div>
 
@@ -393,21 +436,20 @@ export const Library = () => {
                     <h2>Colors</h2>
                     <input id="bgColor" type="color" value={`${bgColor}`} onChange={(e) => setBgColor(e.target.value)} />
                     <input id="txtColor" type="color" value={`${txtColor}`} onChange={(e) => setTxtColor(e.target.value)} /><br /><br />
-                    <button type="submit" className="main-btn" style={{ textAlign: "center" }}>Create</button>
+                    <button type="submit" className="main-btn" style={{ textAlign: "center" }}>Save</button>
                   </div>
                 </div>
               </form>
             </div>) : <p>Select a Book to see its contents</p>}
         </div>
       </section >
+      <Footer />
     </>
   )
 }
 
-/* NOW DO:
-- LOGIN, REGISTER, DEAL WITH
+/* 
 - ADD FOOTER
-- RWD
 - Eliminate add rows, cols, and also in db
 - DONE
 */

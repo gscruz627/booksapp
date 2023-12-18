@@ -18,6 +18,8 @@ export const commonSlice = createSlice({
         setLogout: (state) => {
             state.user = null;
             state.token = null;
+            state.books = null;
+            state.categories = null;
         },
         setBooks: (state, action) => {
             state.books = action.payload.books

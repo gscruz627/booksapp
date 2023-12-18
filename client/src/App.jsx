@@ -7,6 +7,7 @@ import RegisterView from "../views/RegisterView"
 import Search from "../views/Search"
 import MyBooks from "../views/MyBooks"
 import '../public/generals.css'
+import Profile from "../views/Profile"
 
 function App() {
   const isAuth = useSelector((state) => state.token)
@@ -18,8 +19,8 @@ function App() {
           <Route path="/login" element={ isAuth ? <Navigate to="/" /> : <LoginView /> } />
           <Route path="/register" element={ isAuth ? <Navigate to="/" /> : <RegisterView /> } />
           <Route path="/search" element={ !isAuth ? <Navigate to="/login" /> : <Search /> } />
-          <Route path="/mybooks" element={ !isAuth ? <Navigate to="/login" /> : <MyBooks /> } />
           <Route path="/library" element={ !isAuth ? <Navigate to="/login" /> : <Library /> } />
+          <Route path="/profile" element={ !isAuth ? <Navigate to="/login" /> : <Profile/>} />
         </Routes>
       </BrowserRouter>
     </div>

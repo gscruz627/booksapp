@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { useDispatch } from "react-redux"
 import { setLogin } from '../store'
 import Navbar from '../components/Navbar'
+import { Link } from 'react-router-dom'
+import Footer from '../components/Footer'
 
 const LoginView = () => {
   const [username, setUsername] = useState("")
@@ -47,9 +49,11 @@ const LoginView = () => {
           Password: 
         </label><br/>
         <input type="password" className="textbox-main" required id="password" onChange={(e) => setPassword(e.target.value)}/><br/>
-        <button type="submit" className="main-btn">Login</button>
+        <button type="submit" className="main-btn">Login</button><br/>
+        <Link to="/register">Register instead</Link>
       </form>
     </div>
+    <Footer/>
     </>
   )
 }

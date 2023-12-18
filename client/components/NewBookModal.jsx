@@ -64,7 +64,7 @@ const NewBookModal = ({ book, setAddBook }) => {
         })
         const requestParsed = await request.json()
         if (requestParsed) {
-            navigate("/mybooks")
+            navigate("/library")
         } else {
             alert("Request failed")
         }
@@ -136,7 +136,7 @@ const NewBookModal = ({ book, setAddBook }) => {
 
                         <div className="lower-p-left">
                             <img src={currentImageUrl ? currentImageUrl : "/default.jpg"} width="200" />
-                            <div className="book" style={{ border: "6px solid #1E1A18", height: "100%", color: txtColor, backgroundColor: bgColor }}>
+                            <div className="book" style={{ border: "6px solid #1E1A18", height: "100%", color: txtColor, backgroundColor: bgColor, width:"30px" }}>
                                 <p>{title.length > 20 ? `${title.substring(0, 20)}...` : title}</p>
                             </div>
                         </div>

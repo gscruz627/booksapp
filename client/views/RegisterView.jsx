@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { setLogin } from "../store.js"
 import Navbar from '../components/Navbar.jsx'
+import Footer from '../components/Footer.jsx'
 
 const RegisterView = () => {
   const [username, setUsername] = useState("")
@@ -68,9 +69,11 @@ const RegisterView = () => {
           </label><br />
           <small>Required: Length: 6+</small><br />
           <input className="textbox-main" type="password" required id="checkPassword" onChange={(e) => setCheckPassword(e.target.value)} /><br />
-          <button type="submit" className="main-btn">Register</button>
+          <button type="submit" className="main-btn">Register</button><br/>
+        <Link to="/login">Login instead</Link>
         </form>
       </div>
+      <Footer/>
     </>
   )
 }
