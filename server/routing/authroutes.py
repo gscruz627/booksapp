@@ -34,7 +34,6 @@ def login():
     isPasswordAuth = check_password_hash(user.password, password)
     if not isPasswordAuth:
         return jsonify({"message" : "Authentication Error"}, 400)
-    print(jwtkey)
     token = jwt.encode({"user": user.to_dict()}, key=str(jwtkey), algorithm="HS256")
 
     return jsonify({"user" : user.to_dict(), "token" : token}, 201)   

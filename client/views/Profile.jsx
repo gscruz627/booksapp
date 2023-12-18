@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setLogin, setLogout } from '../store'
+import { setLogin, setLogout, setBooks } from '../store'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
@@ -12,6 +12,21 @@ const Profile = () => {
     const books = useSelector((state) => state.books);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const getBooks = async () => {
+        const request = await fetch(
+          category == "All" ? `${SERVER_URL}/books/${user.id}` : `${SERVER_URL}/books/${user.id}?category=${encodeURIComponent(category)}`, {
+          headers: {
+            "Authentication": token
+          }
+        })
+        const requestParsed = await request.json();
+        if (requestParsed) {
+          dispatch(setBooks({ books: requestParsed[0]["books"] }));
+        } else {
+          alert("Error on server");
+        }
+      }
 
     const handleChangePassword = async () => {
         let newpassword = prompt("New Password:")
@@ -55,6 +70,10 @@ const Profile = () => {
             alert("Error on the server");
         }
     }
+
+    useEffect( () => {
+        getBooks()
+    }, [])
     return (
         <>
             <Navbar />
@@ -63,7 +82,7 @@ const Profile = () => {
                     <div className="avatar">{user.username[0]}</div>
                     <div className="profile-upper-right">
                         <h1>{user.username}</h1><br/>
-                        <h4>{books.length} Book Entries</h4>
+                        <h4>{books && books.length} Book Entries</h4>
                     </div>
                 </div>
                 <div className="profile-lower">
@@ -78,9 +97,5 @@ const Profile = () => {
         </>
     )
 }
-
-/*
-PUBLISH BE, PUBLISH FE, update be new fe link
-*/
 
 export default Profile
