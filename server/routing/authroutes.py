@@ -13,7 +13,7 @@ jwtkey = getenv("JWT_KEY")
 CLIENT_URL = getenv("CLIENT_URL")
 
 @auth.route("/register", methods=["POST"])
-@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@cross_origin(origin=CLIENT_URL, supports_credentials=True)
 def register():
     username = request.json["username"]
     password = request.json["password"]
@@ -24,7 +24,7 @@ def register():
     return jsonify({"message" : "OK"}, 201)
 
 @auth.route("/login", methods=["POST"])
-@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@cross_origin(origin=CLIENT_URL, supports_credentials=True)
 def login():
     username = request.json["username"]
     password = request.json["password"]
@@ -40,7 +40,7 @@ def login():
 
 @auth.route("/changepassword", methods=["PUT"])
 @verifyToken
-@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@cross_origin(origin=CLIENT_URL, supports_credentials=True)
 def changePassword():
     id = request.json["id"]
     newpassword = request.json["newpassword"]
@@ -56,7 +56,7 @@ def changePassword():
 
 @auth.route("/deleteaccount", methods=["DELETE"])
 @verifyToken
-@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@cross_origin(origin=CLIENT_URL, supports_credentials=True)
 def deleteAccount():
     id = request.json["id"]
     user = User.query.filter_by(id=id).first()

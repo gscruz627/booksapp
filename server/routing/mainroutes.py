@@ -12,7 +12,7 @@ CLIENT_URL = getenv("CLIENT_URL")
 
 
 @main.route("/create", methods=["POST"])
-@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@cross_origin(origin=CLIENT_URL, supports_credentials=True,)
 @verifyToken
 def createBook():
     author_id = request.json["id"]
@@ -40,7 +40,7 @@ def createBook():
     return jsonify({"message" : "OK"}, 201)
 
 @main.route("/book/<int:id>")
-@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@cross_origin(origin=CLIENT_URL, supports_credentials=True)
 @verifyToken
 def returnBook(id):
     book = Book.query.filter_by(id=id).first()
@@ -49,7 +49,7 @@ def returnBook(id):
     return jsonify({"book" : book.to_dict()}, 200)
 
 @main.route("/books/<int:userId>")
-@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@cross_origin(origin=CLIENT_URL, supports_credentials=True)
 @verifyToken
 def returnBooks(userId):
     if request.args.get('category'):
@@ -60,7 +60,7 @@ def returnBooks(userId):
 
 @main.route("/editbook/<int:id>", methods=["POST"])
 @verifyToken
-@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@cross_origin(origin=CLIENT_URL, supports_credentials=True)
 def editBook(id):
     userId = request.json["userId"]
     book = Book.query.filter_by(id=id).first()
@@ -75,7 +75,7 @@ def editBook(id):
     return jsonify({"book" : book.to_dict()}, 200)
 
 @main.route("/deletebook/<int:id>", methods=["DELETE"])
-@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@cross_origin(origin=CLIENT_URL, supports_credentials=True)
 @verifyToken
 def deleteBook(id):
     userId = request.json["userId"]
@@ -92,7 +92,7 @@ def deleteBook(id):
     return jsonify({"books" : list(map(lambda book: book.to_dict(), books))}, 200)
 
 @main.route("/newcategory", methods=["POST"])
-@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@cross_origin(origin=CLIENT_URL, supports_credentials=True)
 @verifyToken
 def createCategory():
     name = request.json["name"]
@@ -104,7 +104,7 @@ def createCategory():
     return jsonify({"categories": list(map(lambda category: category.to_dict(), categories))}, 201)
 
 @main.route("/editcategory/<int:id>", methods=["POST"])
-@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@cross_origin(origin=CLIENT_URL, supports_credentials=True)
 @verifyToken
 def editCategory(id):
     category = Category.query.filter_by(id=id).first()
@@ -118,7 +118,7 @@ def editCategory(id):
     return jsonify({"category": category.to_dict()}, 200)
 
 @main.route("/deletecategory/<int:id>", methods=["DELETE"])
-@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@cross_origin(origin=CLIENT_URL, supports_credentials=True)
 @verifyToken
 def deleteCategory(id):
     userId = request.json["userId"]
@@ -131,7 +131,7 @@ def deleteCategory(id):
     return jsonify({"categories" : list(map(lambda category: category.to_dict(), categories))}, 200)
 
 @main.route("/categories/<int:user_id>")
-@cross_origin(origins=CLIENT_URL, supports_credentials=True)
+@cross_origin(origin=CLIENT_URL, supports_credentials=True)
 @verifyToken
 def categories(user_id):
     categories = Category.query.filter_by(author_id=user_id)
