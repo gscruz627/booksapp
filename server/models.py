@@ -74,8 +74,6 @@ class Category(db.Model):
     __tablename__ = "categories"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), nullable=False)
-    rows = db.Column(db.Integer, default=1)
-    columns = db.Column(db.Integer, default=4)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     books = db.relationship("Book", backref="ownercategory", lazy="dynamic")
 
@@ -87,6 +85,4 @@ class Category(db.Model):
         return {
             "id" : self.id,
             "name" : self.name,
-            "rows" : self.rows,
-            "columns" : self.columns
         }

@@ -5,39 +5,41 @@ import { setCategories } from '../store'
 
 const NewBookModal = ({ book, setAddBook }) => {
 
-    const SERVER_URL = import.meta.env["VITE_SERVER_URL"]
-    const token = useSelector((state) => state.token)
-    const user = useSelector((state) => state.user)
-    const [title, setTitle] = useState(book["title"] ? book["title"] : null)
-    const [author, setAuthor] = useState(book["author_name"] ? book["author_name"][0] : null)
-    const [year, setYear] = useState(book["publish_year"] ? book["publish_year"][0] : null)
-    const [isbn, setIsbn] = useState(book["isbn"] ? book["isbn"][0] : null)
-    const [currentImageUrl, setCurrentImageUrl] = useState(book["isbn"] ? `https://images.isbndb.com/covers/${book["isbn"][0].substring(book["isbn"][0].length - 4, book["isbn"][0].length - 2)}/${book["isbn"][0].substring(book["isbn"][0].length - 2)}/${book["isbn"][0]}.jpg` ? `https://images.isbndb.com/covers/${book["isbn"][0].substring(book["isbn"][0].length - 4, book["isbn"][0].length - 2)}/${book["isbn"][0].substring(book["isbn"][0].length - 2)}/${book["isbn"][0]}.jpg` : null : null)
-    const [readingStatus, setReadingStatus] = useState("")
-    const [startDate, setStartDate] = useState(null)
-    const [endDate, setEndDate] = useState(null)
-    const [category, setCategory] = useState(null)
-    const [rate, setRate] = useState(null)
-    const [bgColor, setBgColor] = useState("#FFFFFF")
-    const [txtColor, setTxtColor] = useState("#000000")
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-    const categories = useSelector((state) => state.categories)
+    const SERVER_URL = import.meta.env["VITE_SERVER_URL"];
+    const user = useSelector((state) => state.user);
+    const token = useSelector((state) => state.token);
+    const categories = useSelector((state) => state.categories);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [title, setTitle] = useState(book["title"] ? book["title"] : null);
+    const [author, setAuthor] = useState(book["author_name"] ? book["author_name"][0] : null);
+    const [year, setYear] = useState(book["publish_year"] ? book["publish_year"][0] : null);
+    const [isbn, setIsbn] = useState(book["isbn"] ? book["isbn"][0] : null);
+    const [currentImageUrl, setCurrentImageUrl] = useState(book["isbn"] ? `https://images.isbndb.com/covers/${book["isbn"][0].substring(book["isbn"][0].length - 4, book["isbn"][0].length - 2)}/${book["isbn"][0].substring(book["isbn"][0].length - 2)}/${book["isbn"][0]}.jpg` ? `https://images.isbndb.com/covers/${book["isbn"][0].substring(book["isbn"][0].length - 4, book["isbn"][0].length - 2)}/${book["isbn"][0].substring(book["isbn"][0].length - 2)}/${book["isbn"][0]}.jpg` : null : null);
+    const [readingStatus, setReadingStatus] = useState("");
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const [category, setCategory] = useState(null);
+    const [rate, setRate] = useState(null);
+    const [bgColor, setBgColor] = useState("#FFFFFF");
+    const [txtColor, setTxtColor] = useState("#000000");
+
     const loadCategories = async () => {
         const request = await fetch(`${SERVER_URL}/categories/${user.id}`, {
             headers: {
                 "Authentication": token
             }
         })
-        const requestParsed = await request.json()
+        const requestParsed = await request.json();
         if (requestParsed) {
-            dispatch(setCategories({ categories: requestParsed[0]["categories"] }))
+            dispatch(setCategories({ categories: requestParsed[0]["categories"] }));
         }
     }
+
     const handleSubmit = async (e) => {
-        e.preventDefault()
-        if (readingStatus == "") {
-            alert("need a reading status")
+        e.preventDefault();
+        if (readingStatus === "") {
+            alert("Need a Reading Status");
             return
         }
         const request = await fetch(`${SERVER_URL}/create`, {
@@ -62,15 +64,17 @@ const NewBookModal = ({ book, setAddBook }) => {
                 "spinetext": txtColor
             })
         })
-        const requestParsed = await request.json()
+        const requestParsed = await request.json();
         if (requestParsed) {
-            navigate("/library")
+            navigate("/library");
         } else {
-            alert("Request failed")
+            alert("Request failed");
+            return
         }
     }
+
     useEffect(() => {
-        loadCategories
+        loadCategories();
     }, [])
 
     return (
@@ -130,20 +134,18 @@ const NewBookModal = ({ book, setAddBook }) => {
                         )}
                     </section>
 
-
-
                     <div className="lower-panel">
 
                         <div className="lower-p-left">
                             <img src={currentImageUrl ? currentImageUrl : "/default.jpg"} width="200" />
-                            <div className="book" style={{ border: "6px solid #1E1A18", height: "100%", color: txtColor, backgroundColor: bgColor, width:"30px" }}>
+                            <div className="book" style={{ border: "6px solid #1E1A18", height: "100%", color: txtColor, backgroundColor: bgColor, width: "30px" }}>
                                 <p>{title.length > 20 ? `${title.substring(0, 20)}...` : title}</p>
                             </div>
                         </div>
 
                         <div className="lower-p-right">
                             <div className="rate">
-                                <h2 style={{marginBottom: "-1rem"}}>Rate {rate && `(${rate})`}</h2>
+                                <h2 style={{ marginBottom: "-1rem" }}>Rate {rate && `(${rate})`}</h2>
                                 <div id="rating_bar">
                                     <span id="rate_1" onClick={() => setRate(1)}></span>
                                     <span id="rate_2" onClick={() => setRate(2)}></span>
@@ -156,7 +158,7 @@ const NewBookModal = ({ book, setAddBook }) => {
                             <input className="textbox-main" type="text" defaultValue={currentImageUrl} onBlur={(e) => setCurrentImageUrl(e.target.value)} />
                             <h2>Colors</h2>
                             <input id="bgColor" type="color" value={`${bgColor}`} onChange={(e) => setBgColor(e.target.value)} />
-                            <input id="txtColor" type="color" value={`${txtColor}`} onChange={(e) => setTxtColor(e.target.value)} /><br/><br/>
+                            <input id="txtColor" type="color" value={`${txtColor}`} onChange={(e) => setTxtColor(e.target.value)} /><br /><br />
                             <button type="submit" className="main-btn" style={{ textAlign: "center" }}>Create</button>
                         </div>
                     </div>

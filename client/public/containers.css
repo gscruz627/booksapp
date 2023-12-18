@@ -1,0 +1,339 @@
+nav.primary-nav {
+    background-color: var(--blue);
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    color: #FFF;
+}
+nav.primary-nav h1{
+    margin-left: 66px;
+}
+
+nav.primary-nav li {
+    margin: auto 1rem;
+}
+
+nav.secondary-nav{
+    background-color:rgb(241, 241, 241);
+    height: 50px;
+    display:flex;
+    justify-content: start;
+    align-items: center;
+}
+nav.secondary-nav ul{
+    margin-left:100px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+nav.secondary-nav li{
+    display:flex;
+    align-items: center;
+    margin: auto 1rem;
+    height:50px;
+    cursor:pointer;
+
+}
+nav.secondary-nav li:hover{
+    font-weight:bolder;
+    color: var(--blue);
+    border-bottom:2px solid var(--blue)
+}
+nav h1 {
+    font-size: 36px;
+}
+.searchbox {
+    margin: 4rem auto;
+    text-align: center;
+}
+
+.searchbox h1 {
+    color:#3e3e3e;
+    font-size: 36px;
+    margin: 1rem auto;
+}
+
+.textbox-main {
+    padding: 1rem 2rem;
+    width: 60%;
+    margin: auto auto;
+    border-bottom:1px solid #3e3e3e;
+    font-size: 14px;
+}
+.results{
+    display: grid;
+    grid-template-columns:auto auto auto;
+    width:60%;
+    margin: auto auto 2rem auto;
+    row-gap:5rem;
+    text-align: center;
+}
+.newbookmodal {
+    background-color: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 3rem 25%;
+    overflow-y: scroll;
+}
+
+.newbook-inner {
+    background-color: white;
+    border-radius: 5px;
+}
+
+.newbook-inner > section{
+    background-color: var(--blue);
+    width:100%;
+    margin: auto auto;
+    padding: 1rem;
+    font-size:28px;
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+    color:#FFF;
+}
+.newbook-inner form{
+    padding: 3rem 2rem;
+    font-size: 18px;
+}
+.form-dual{
+    display:grid;
+    grid-template-columns: 15% 35% 15% 35%;
+    margin: 0 auto 1rem 0;
+}
+.form-read-status{
+    display:flex;
+    justify-content: space-between;
+    margin:1rem auto;
+}
+.form-date{
+    display:flex;
+    justify-content: center;
+    margin:1em auto;
+}
+.lower-panel{
+    display:grid;
+    grid-template-columns: auto auto;
+}
+.lower-p-left{
+    height:200px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.lower-p-left img{
+    height:100%;
+    max-width:200px;
+    width:auto;
+    object-fit: fill;
+    margin-right:1rem;
+}
+
+.newbook-inner form input:not([type='color']), select{
+    padding: 0.5rem 1rem;
+}
+
+.library-home {
+    width: 90%;
+    display: grid;
+    grid-template-columns: 60% 40%;
+    margin: auto auto;
+}
+
+.library-container {
+    padding: 1rem;
+    text-align: center;
+}
+
+.bookshelf {
+    background-color: #AB7038;
+    border: 6px solid #1E1A18;
+    margin: auto auto;
+    padding: auto 15px;
+}
+
+.bookshelf-row {
+    border: 6px solid #1E1A18;
+    background-color: #E29964;
+    margin: 15px auto;
+    display: grid
+}
+.bookshelf-row div:not(.book):not(.triangle):not(.book-hover-info):hover{
+    background-color: rgb(149, 108, 108);
+}
+
+.bookshelf-row div:not(.book):not(.book-hover-info):last-child {
+    width: 24px !important;
+}
+.form-container{
+    text-align: center;
+    width: min(100%, 600px);
+    max-width: 600px;
+    margin: 2rem auto;
+}
+.form-container form{
+    margin-top:2rem;
+}
+.form-container > form >*{
+    margin: 1rem auto;
+}
+.error-box{
+    width:60%;
+    margin: 1rem auto;
+    border: 1px solid darkred;
+    background-color:rgb(255, 227, 231);
+    color: darkred;
+    padding:1rem 2rem;
+}
+.rate > div{
+    display:inline;
+}
+.inner-edit form{
+    padding: 1rem 0rem;
+}
+.inner-edit > section {
+    padding: 0.15rem 0.5rem;
+}
+
+.profile-card{
+    width:82%;
+    margin:2rem auto;
+}
+.profile-upper{
+    display:grid;
+    grid-template-columns: 30% 70%;
+}
+.profile-upper h1{
+    font-size:48px;
+}
+.profile-upper h4{
+    font-size:24px;
+}
+.profile-lower{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5rem auto 2rem auto;
+}
+.profile-lower div{
+    height: 7rem;
+    width: 18rem;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border-radius:5px;
+    font-weight:bolder;
+    color:#FFF;
+    font-size:24px;
+}
+footer{
+    background-color: var(--blue);
+    padding:1rem;
+    text-align: center;
+    margin:auto auto;
+    color: #FFF;
+    font-weight: bold;
+}
+footer div{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    margin:1rem auto;
+}
+footer div > *, footer div ul li{
+    margin: auto 1rem;
+}
+.home-container{
+    display:grid;
+    grid-template-columns: 25% 75%;
+    min-height:100vh;
+}
+.sidebar{
+    background-color: #ececec;
+    text-align: center;
+    padding:1rem;
+}
+.sidebar > *{
+    margin:0.5rem auto;
+}
+.home-content{
+    text-align: center;
+    padding:1rem 5rem;
+}
+.home-content h1{
+    font-size: 42px;
+}
+.home-content > *{
+    margin: 2rem auto;
+}
+.home-content p{
+    text-align: left;
+    font-size:20px;
+}
+@media screen and (max-width: 768px){
+    .home-container{
+        display:block;
+    }
+    .home-content{
+        padding:1rem;
+    }
+    nav.primary-nav{
+        justify-content: center;
+    }
+    nav.primary-nav h1{
+        text-align: center;
+        margin-left:0;
+    }
+    nav.secondary-nav{
+        flex-direction: row;
+        height:auto;
+        justify-content: center;
+    }
+    nav.secondary-nav ul{
+        flex-direction: column;
+    }
+    nav.secondary-nav ul{
+        margin-left:0;
+    }
+    .textbox-main{
+        width:90%
+    }
+    .newbookmodal{
+        padding: 2rem 1rem;
+    }
+    .form-dual{
+        row-gap: 1rem;
+        grid-template-columns: 40% 60%;
+    }
+    .results{
+        width:90%;
+        grid-template-columns: auto auto;
+    }
+    .resultbook button, .form-read-status button{
+        font-size:14px;
+        padding:0.5rem;
+    }
+    .form-date{
+        flex-wrap:wrap;
+    }
+    .lower-panel{
+        grid-template-columns: 100%;
+        row-gap:2rem;
+    }
+    .library-home{
+        grid-template-columns: 100%;
+    }
+    .profile-upper{
+        grid-template-columns: 100%;
+        text-align: center;
+    }
+    .profile-lower div{
+        font-size:14px;
+        width:auto;
+        padding:0.5rem;
+        height:auto;
+    }
+}

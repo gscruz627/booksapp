@@ -2,20 +2,18 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { setLogout } from '../store'
-import { useMediaQuery } from '../hooks/useMediaQuery'
 
 const Navbar = () => {
-    const isLargeScreen = useMediaQuery("md")
-    const user = useSelector((state) => state.user)
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const user = useSelector((state) => state.user);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     return (
         <div>
             <nav className="primary-nav">
                 <ul>
                     <h1 style={{ cursor: "pointer" }} onClick={() => navigate("/")}><i className="fa-solid fa-book-open"></i> BooksApp</h1>
                 </ul>
-            </nav >
+            </nav>
             <nav className="secondary-nav">
                 <ul>
                     <li onClick={() => navigate("/")}>Home</li>

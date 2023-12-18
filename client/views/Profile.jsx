@@ -1,17 +1,18 @@
 import React from 'react'
-import Navbar from '../components/Navbar'
 import { useDispatch, useSelector } from 'react-redux'
 import { setLogin, setLogout } from '../store'
 import { useNavigate } from 'react-router-dom'
+import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 
 const Profile = () => {
-    const user = useSelector((state) => state.user)
-    const token = useSelector((state) => state.token)
-    const books = useSelector((state) => state.books)
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
-    const SERVER_URL = import.meta.env["VITE_SERVER_URL"]
+    const SERVER_URL = import.meta.env["VITE_SERVER_URL"];
+    const user = useSelector((state) => state.user);
+    const token = useSelector((state) => state.token);
+    const books = useSelector((state) => state.books);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const handleChangePassword = async () => {
         let newpassword = prompt("New Password:")
         const request = await fetch(`${SERVER_URL}/changepassword`, {
@@ -25,14 +26,15 @@ const Profile = () => {
                 'newpassword': newpassword
             })
         })
-        const requestParsed = await request.json()
+        const requestParsed = await request.json();
         if(requestParsed){
-            dispatch(setLogin({user: requestParsed[0]["user"], token: token}))
-            alert("Sucessully changed!")
+            dispatch(setLogin({user: requestParsed[0]["user"], token: token}));
+            alert("Sucessully changed!");
         } else {
-            alert("Error on the Server")
+            alert("Error on the Server");
         }
     }
+
     const handleDeleteAccount = async () => {
         const request = await fetch(`${SERVER_URL}/deleteaccount`, {
             method: "DELETE",
@@ -44,13 +46,13 @@ const Profile = () => {
                 id: user.id
             })
         });
-        const requestParsed = await request.json()
+        const requestParsed = await request.json();
         if(requestParsed[1] === 200){
-            dispatch(setLogout())
-            alert("Sucessfully deleted!, redirecting to home")
-            navigate("/")
+            dispatch(setLogout());
+            alert("Sucessfully deleted!, redirecting to home");
+            navigate("/");
         } else {
-            alert("Error on the server")
+            alert("Error on the server");
         }
     }
     return (
@@ -78,10 +80,6 @@ const Profile = () => {
 }
 
 /*
-SCREENSHOOTS,
-GITHUB,
-FINAL UPDATE, clean code, fix db not rows cols, clean logs print
-CHANGE DB,
 PUBLISH BE, PUBLISH FE, update be new fe link
 */
 

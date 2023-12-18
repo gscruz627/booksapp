@@ -1,0 +1,127 @@
+.textbox-main:focus{
+    border: 1px solid var(--blue)
+}
+.textbox-main::placeholder {
+    color: var(--cbrown)
+}
+
+.resultbook{
+    display:grid;
+    grid-template-rows: 60% 40%;
+    text-align: center;
+}
+.resultbook section h2{
+    font-weight:350;
+    font-size:20px;
+}
+.resultbook p{
+    font-size:14px;
+}
+.resultbook > img{
+    min-width:100px;
+    height:150px;
+    margin: auto auto;
+}
+
+.book {
+    width: 30px;
+    height: 100%;
+    border-left: 6px solid #1E1A18;
+    overflow-x: visible;
+    overflow-y: visible;
+    cursor: pointer;
+    writing-mode: vertical-rl;
+    rotate: 180deg;
+    text-align: left;
+    padding-top: 5px;
+    position:relative;
+}
+
+.book p {
+    font-weight: bolder;
+}
+
+.modal-color {
+    text-align: center;
+}
+
+.triangle {
+    width: 0;
+    height: 0;
+    border-left: 26px solid transparent;
+    border-bottom: 26px solid rgba(128, 0, 128, 0.299);
+    background-color:transparent;
+    margin-right: -21px;
+    margin-top: 108px;
+}
+
+.library-card * {
+    text-align: center !important;
+}
+
+.book .book-hover-info {
+    writing-mode:initial;
+    rotate:180deg;
+    visibility: hidden;
+    width: 200px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 1rem;
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    right:-360%;
+    margin-left: -60px;
+}
+.book .book-hover-info::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+ 
+.book:hover .book-hover-info {
+    visibility: visible;
+}
+
+#rating_bar {
+    display:inline;
+}
+#rating_bar > span:before {
+    content:"\2605";
+    color: #c7c5c5;
+    cursor:pointer;
+    font-size:2em;
+}
+#rating_bar:hover > span:before {
+    color: rgb(255, 170, 24);
+}
+
+#rating_bar > span:hover ~ span:before {
+    color: #c7c5c5;
+}
+.avatar{
+    width:15rem;
+    height:14rem;
+    padding:2rem;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 192px;
+    border-radius:5px;
+    background-color:#d9d9d9
+}
+@media screen and (min-width: 768px){
+    .book{
+        width:100%;
+    }
+    .avatar{
+        margin: 0.5rem auto;
+    }
+}

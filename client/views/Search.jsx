@@ -5,20 +5,18 @@ import SearchBookCard from '../components/SearchBookCard'
 import Footer from '../components/Footer'
 
 const Search = () => {
-  const [query, setQuery] = useState("")
-  const [nfound, setNFound] = useState(null)
-  const [books, setBooks] = useState([])
-  const [selectedBook, setSelectedBook] = useState(null)
+  const [query, setQuery] = useState("");
+  const [books, setBooks] = useState([]);
+  const [selectedBook, setSelectedBook] = useState(null);
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setBooks(null)
+    e.preventDefault();
+    setBooks(null);
     const request = await fetch(`https://openlibrary.org/search.json?q=${query}`)
-    const requestParsed = await request.json()
+    const requestParsed = await request.json();
     if (!requestParsed) {
       alert("Error when gathering books, please add books manually")
     } else {
-      setNFound(requestParsed["numFound"])
-      setBooks(requestParsed["docs"])
+      setBooks(requestParsed["docs"]);
     }
   }
   return (

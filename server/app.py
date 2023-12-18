@@ -3,8 +3,8 @@ from flask_cors import CORS
 from db import db
 app = Flask(__name__)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:Sisnacrack40$@127.0.0.1:5432/books"
-db.db.init_app(app)
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://mnuihgeo:7HmG4WxWR5U8E2TPH12NhwwxfTeOUPGM@berry.db.elephantsql.com/mnuihgeo"
+db.init_app(app)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 

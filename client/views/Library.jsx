@@ -8,55 +8,39 @@ import Footer from '../components/Footer';
 
 
 export const Library = () => {
+
+  const SERVER_URL = import.meta.env["VITE_SERVER_URL"];
   const [, updateState] = React.useState();
   const forceUpdate = React.useCallback(() => updateState({}), []);
-  const SERVER_URL = import.meta.env["VITE_SERVER_URL"]
-  const token = useSelector((state) => state.token)
-  const user = useSelector((state) => state.user)
-  const books = useSelector((state) => state.books)
-  let categories = useSelector((state) => state.categories)
-  const dispatch = useDispatch()
-  const [currentWidth, setCurrentWidth] = useState(window.screen.width)
+  const token = useSelector((state) => state.token);
+  const user = useSelector((state) => state.user);
+  const books = useSelector((state) => state.books);
+  let categories = useSelector((state) => state.categories);
+  const [currentWidth, setCurrentWidth] = useState(window.screen.width);
   const [category, setCategory] = useState("All");
-  const [categoryIndex, setCategoryIndex] = useState(null)
-  const [currentBook, setCurrentBook] = useState(null)
-  const isSmall = useMediaQuery("sm")
-  const [currentMatrix, setCurrentMatrix] = useState(Array.from({ length: category == "All" ? 3 : category["rows"] }, () => Array(category == "All" ? (isSmall ? 8 : 12) : category["columns"]).fill(null)))
-  const [title, setTitle] = useState(null)
-  const [author, setAuthor] = useState(null)
-  const [year, setYear] = useState(null)
-  const [isbn, setIsbn] = useState(null)
-  const [currentImageUrl, setCurrentImageUrl] = useState(null)
-  const [readingStatus, setReadingStatus] = useState(null)
-  const [startDate, setStartDate] = useState(null)
-  const [endDate, setEndDate] = useState(null)
-  const [rate, setRate] = useState(null)
-  const [changeCategory, setChangeCategory] = useState(null)
-  const [bgColor, setBgColor] = useState(null)
-  const [txtColor, setTxtColor] = useState(null)
-  let cols = (window.innerWidth < 768) ? 8 : 12
-  useEffect(() => {
-    if (currentBook) {
-      setTitle(currentBook["title"])
-      setAuthor(currentBook["book_author"])
-      setYear(currentBook["year"])
-      setIsbn(currentBook["isbn"])
-      setCurrentImageUrl(currentBook["picture_url"])
-      setReadingStatus(currentBook["readingstatus"])
-      setStartDate(currentBook["datebegan"])
-      setEndDate(currentBook["dateread"])
-      setRate(currentBook["rate"])
-      setChangeCategory(currentBook["category"])
-      setBgColor(currentBook["spinecolor"])
-      setTxtColor(currentBook["spinetext"])
-    }
-  }, [currentBook])
-
+  const [categoryIndex, setCategoryIndex] = useState(null);
+  const [currentBook, setCurrentBook] = useState(null);
+  const isSmall = useMediaQuery("sm");
+  const [currentMatrix, setCurrentMatrix] = useState(Array.from({ length: category == "All" ? 3 : category["rows"] }, () => Array(category == "All" ? (isSmall ? 8 : 12) : category["columns"]).fill(null)));
+  const [title, setTitle] = useState(null);
+  const [author, setAuthor] = useState(null);
+  const [year, setYear] = useState(null);
+  const [isbn, setIsbn] = useState(null);
+  const [currentImageUrl, setCurrentImageUrl] = useState(null);
+  const [readingStatus, setReadingStatus] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [rate, setRate] = useState(null);
+  const [changeCategory, setChangeCategory] = useState(null);
+  const [bgColor, setBgColor] = useState(null);
+  const [txtColor, setTxtColor] = useState(null);
+  const dispatch = useDispatch();
+  let cols = (window.innerWidth < 768) ? 8 : 12;
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (readingStatus == "") {
-      alert("need a reading status")
+      alert("need a reading status");
       return
     }
     const request = await fetch(`${SERVER_URL}/editbook/${currentBook["id"]}`, {
@@ -84,17 +68,18 @@ export const Library = () => {
         "userId": user.id
       })
     })
-    const requestParsed = await request.json()
+    const requestParsed = await request.json();
     if (requestParsed) {
-      dispatch(setBook({ book: requestParsed[0]["book"] }))
-      setCurrentBook(null)
-      alert("Book saved successfully!")
+      dispatch(setBook({ book: requestParsed[0]["book"] }));
+      setCurrentBook(null);
+      alert("Book saved successfully!");
     } else {
-      alert("Request failed")
+      alert("Request failed");
     }
   }
+
   const handleAddCategory = async () => {
-    const newname = prompt("Name the new category: ")
+    const newname = prompt("Name the new category: ");
     if (!newname) { return }
     const request = await fetch(`${SERVER_URL}/newcategory`, {
       method: "POST",
@@ -106,11 +91,12 @@ export const Library = () => {
     })
     const requestParsed = await request.json();
     if (requestParsed) {
-      dispatch(setCategories({ categories: requestParsed[0]["categories"] }))
+      dispatch(setCategories({ categories: requestParsed[0]["categories"] }));
     } else {
-      alert("Error on server")
+      alert("Error on server");
     }
   }
+
   const getBooks = async () => {
     const request = await fetch(
       category == "All" ? `${SERVER_URL}/books/${user.id}` : `${SERVER_URL}/books/${user.id}?category=${encodeURIComponent(category)}`, {
@@ -118,30 +104,32 @@ export const Library = () => {
         "Authentication": token
       }
     })
-    const requestParsed = await request.json()
+    const requestParsed = await request.json();
     if (requestParsed) {
-      dispatch(setBooks({ books: requestParsed[0]["books"] }))
+      dispatch(setBooks({ books: requestParsed[0]["books"] }));
     } else {
-      alert("Error on server")
+      alert("Error on server");
     }
   }
+
   const loadCategories = async () => {
     const request = await fetch(`${SERVER_URL}/categories/${user.id}`, {
       headers: {
         "Authentication": token
       }
     })
-    const requestParsed = await request.json()
+    const requestParsed = await request.json();
     if (requestParsed) {
-      dispatch(setCategories({ categories: requestParsed[0]["categories"] }))
+      dispatch(setCategories({ categories: requestParsed[0]["categories"] }));
     } else {
-      alert("Error on server")
+      alert("Error on server");
     }
   }
+
   const handleDeleteBook = async () => {
-    const afirm = confirm("Are you sure you want to delte this book?")
+    const afirm = confirm("Are you sure you want to delte this book?");
     if (!afirm) {
-      return;
+      return
     }
     const request = await fetch(`${SERVER_URL}/deletebook/${currentBook["id"]}`, {
       method: "DELETE",
@@ -154,12 +142,13 @@ export const Library = () => {
         userId: user.id
       })
     })
-    const requestParsed = await request.json()
-    setCurrentBook(null)
-    dispatch(setBooks({ books: requestParsed[0]["books"] }))
+    const requestParsed = await request.json();
+    setCurrentBook(null);
+    dispatch(setBooks({ books: requestParsed[0]["books"] }));
   }
+
   const handleEditCategory = async () => {
-    const newname = prompt("New Category Name: ")
+    const newname = prompt("New Category Name: ");
     if (newname) {
       const request = await fetch(`${SERVER_URL}/editcategory/${categories[categoryIndex]["id"]}`, {
         method: "POST",
@@ -172,19 +161,20 @@ export const Library = () => {
           newname: newname
         })
       })
-      const requestParsed = await request.json()
+      const requestParsed = await request.json();
       if (requestParsed) {
-        dispatch(reduxSetCategory({ category: requestParsed[0]["category"] }))
-        setCategory(requestParsed[0]["category"]["name"])
-        forceUpdate()
+        dispatch(reduxSetCategory({ category: requestParsed[0]["category"] }));
+        setCategory(requestParsed[0]["category"]["name"]);
+        forceUpdate();
       } else {
-        alert("Error on the server")
+        alert("Error on the server");
+        return
       }
     }
-    return
   }
+
   const handleDeleteCategory = async () => {
-    const afirm = confirm("Are you sure you will delete this category? (Books will NOT be deleted)")
+    const afirm = confirm("Are you sure you will delete this category? (Books will NOT be deleted)");
     if (!afirm) {
       return;
     }
@@ -198,71 +188,31 @@ export const Library = () => {
         userId: user.id
       })
     })
-    const requestParsed = await request.json()
+    const requestParsed = await request.json();
     if (requestParsed) {
-      dispatch(setCategories({ categories: requestParsed[0]["categories"] }))
-      setCategoryIndex(null)
-      setCategory("All")
-      setCurrentBook(null)
+      dispatch(setCategories({ categories: requestParsed[0]["categories"] }));
+      setCategoryIndex(null);
+      setCategory("All");
+      setCurrentBook(null);
     } else {
-      alert("Error on the server")
+      alert("Error on the server");
     }
   }
-  useEffect(() => {
-    loadCategories()
-  }, [])
-  useEffect(() => {
-    getBooks()
-    loadNewMatrix()
-  }, [category])
-  useEffect(() => {
-    console.log("NOVEN 9000")
-  }, [currentMatrix])
-  useEffect(() => {
-    loadNewMatrix();
-  }, [books])
-
-  useEffect(() => {
-    let timeoutId;
-
-    const handleResize = () => {
-      // Clear the previous timeout
-      clearTimeout(timeoutId);
-
-      // Set a new timeout
-      timeoutId = setTimeout(() => {
-        const screenWidth = window.innerWidth;
-        loadNewMatrix()
-      }, 300); // Adjust the delay as needed
-    };
-
-    // Add event listener for window resize
-    window.addEventListener('resize', handleResize);
-
-    // Remove event listener on component unmount
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
 
   const loadNewMatrix = async () => {
     if (window.innerWidth < 768) {
-      cols = 8
+      cols = 8;
     } else {
-      cols = 12
+      cols = 12;
     }
-    let numrows = Math.ceil(books.length / cols)
-    console.log(numrows)
-    if (books.length === 0) { numrows = 1 }
-    setCurrentMatrix(Array.from({ length: (category == "All") ? 3 : numrows }, () => Array(cols).fill(null)))
-
-    // Fix general index issue (Don't Touch it works!)
-    let genIdx = 0
+    let numrows = Math.ceil(books.length / cols);
+    if (books.length === 0) { numrows = 1; }
+    setCurrentMatrix(Array.from({ length: (category == "All") ? 3 : numrows }, () => Array(cols).fill(null)));
+    let genIdx = 0;
     if (category === "All") {
       genIdx = 0;
     } else {
-      genIdx = 0 - (numrows * cols)
+      genIdx = 0 - (numrows * cols);
     }
     const initialMatrix = Array.from({ length: (category == "All") ? 3 : numrows }, () => Array(cols).fill(null))
     let a = initialMatrix.map((row, rowIndex) =>
@@ -271,11 +221,54 @@ export const Library = () => {
         genIdx += 1
         return value ? value : ""
       }))
-
-    setCurrentMatrix(a)
-
-
+    setCurrentMatrix(a);
   }
+
+  useEffect(() => {
+    if (currentBook) {
+      setTitle(currentBook["title"]);
+      setAuthor(currentBook["book_author"]);
+      setYear(currentBook["year"]);
+      setIsbn(currentBook["isbn"]);
+      setCurrentImageUrl(currentBook["picture_url"]);
+      setReadingStatus(currentBook["readingstatus"]);
+      setStartDate(currentBook["datebegan"]);
+      setEndDate(currentBook["dateread"]);
+      setRate(currentBook["rate"]);
+      setChangeCategory(currentBook["category"]);
+      setBgColor(currentBook["spinecolor"]);
+      setTxtColor(currentBook["spinetext"]);
+    }
+  }, [currentBook])
+
+  useEffect(() => {
+    loadCategories();
+  }, [])
+
+  useEffect(() => {
+    getBooks();
+    loadNewMatrix();
+  }, [category])
+
+  useEffect(() => {
+    loadNewMatrix();
+  }, [books])
+
+  useEffect(() => {
+    let timeoutId;
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        const screenWidth = window.innerWidth;
+        loadNewMatrix();
+      }, 300);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -373,14 +366,14 @@ export const Library = () => {
                         <>
                           <option key={99999999999999} value={""}></option>
                           {categories.map((category, i) => (
-                          (category["name"] === currentBook.category) ?
-                          (
-                            <option key={i} value={currentBook.category} selected>{category["name"]}</option>
-                          ) : (
-                          <option key={i} value={category["name"]} >{category["name"]}</option>
-                          )
+                            (category["name"] === currentBook.category) ?
+                              (
+                                <option key={i} value={currentBook.category} selected>{category["name"]}</option>
+                              ) : (
+                                <option key={i} value={category["name"]} >{category["name"]}</option>
+                              )
                           ))}
-                      </>)
+                        </>)
                     }
                   </select>
                 </div>
@@ -408,8 +401,6 @@ export const Library = () => {
                     </>
                   )}
                 </section>
-
-
 
                 <div className="lower-panel">
 
@@ -447,9 +438,3 @@ export const Library = () => {
     </>
   )
 }
-
-/* 
-- ADD FOOTER
-- Eliminate add rows, cols, and also in db
-- DONE
-*/

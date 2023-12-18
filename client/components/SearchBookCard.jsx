@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import NewBookModal from './NewBookModal'
 
 const SearchBookCard = ({ book, i }) => {
-    const [addBook, setAddBook] = useState(false)
+    const [addBook, setAddBook] = useState(false);
     return (
         <div className="resultbook">
             {addBook && (

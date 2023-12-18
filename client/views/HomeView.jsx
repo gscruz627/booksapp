@@ -1,18 +1,19 @@
 import React, { useEffect } from 'react'
-import NewBookModal from '../components/NewBookModal'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { setBooks } from '../store'
+import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
 
 const HomeView = () => {
-  const isAuth = useSelector((state) => state.token)
-  const books = useSelector((state) => state.books)
-  const SERVER_URL = import.meta.env["VITE_SERVER_URL"]
-  const user = useSelector((state) => state.user)
-  const token = useSelector((state) => state.token)
-  const dispatch = useDispatch()
+
+  const SERVER_URL = import.meta.env["VITE_SERVER_URL"];
+  const isAuth = useSelector((state) => state.token);
+  const books = useSelector((state) => state.books);
+  const user = useSelector((state) => state.user);
+  const token = useSelector((state) => state.token);
+  const dispatch = useDispatch();
+
   const loadBooks = async () => {
     const request = await fetch(`${SERVER_URL}/books/${user.id}`, {
       headers: {
@@ -21,15 +22,16 @@ const HomeView = () => {
     })
     const requestParsed = await request.json()
     if (requestParsed) {
-      console.log(requestParsed)
       dispatch(setBooks({ books: requestParsed[0]["books"] }))
     } else {
       alert("Request error")
     }
   }
+
   useEffect(() => {
     loadBooks()
   }, [])
+
   return (
     <>
       <Navbar />
@@ -56,19 +58,19 @@ const HomeView = () => {
         <div className="home-content">
           <h1> <i className="fa-solid fa-book-open"></i> Books App </h1>
           <p>With Books App you can search for books, and add them to lists of currently reading
-            or alraedy read, or want to read. <br/>You can visually see the number of books you have added
-            with the Library Tool. <br/>Displaying also a small version of the book's spine which you can also
+            or alraedy read, or want to read. <br />You can visually see the number of books you have added
+            with the Library Tool. <br />Displaying also a small version of the book's spine which you can also
             edit
           </p>
-          { isAuth ? (
+          {isAuth ? (
             <>
-            <Link to="/search"><button className="main-btn">Go to Search</button></Link>
-            <p>You have: {books && books.length} total books added</p>
+              <Link to="/search"><button className="main-btn">Go to Search</button></Link>
+              <p>You have: {books && books.length} total books added</p>
             </>
           ) : (
             <>
-            <Link to="/login"><button className="main-btn">Login</button></Link><br/><br/>
-            <Link to="/register"><button className="main-btn">Create An Account</button></Link>
+              <Link to="/login"><button className="main-btn">Login</button></Link><br /><br />
+              <Link to="/register"><button className="main-btn">Create An Account</button></Link>
             </>
           )}
         </div>
