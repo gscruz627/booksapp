@@ -4,10 +4,12 @@ from db import db
 from routing.authroutes import auth as auth_blueprint
 from routing.mainroutes import main as main_blueprint
 from models import Book, User
+from os import getenv
 
 def create_app():
+    postgreslink = getenv("POSTGRES_LINK")
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://mnuihgeo:7HmG4WxWR5U8E2TPH12NhwwxfTeOUPGM@berry.db.elephantsql.com/mnuihgeo"
+    app.config["SQLALCHEMY_DATABASE_URI"] = str(postgreslink)
     db.init_app(app)
     app.config['CORS_HEADERS'] = 'Content-Type'
     app.register_blueprint(auth_blueprint)
