@@ -8,7 +8,7 @@ from models import Book, User
 
 def create_app():
     from os import getenv
-    postgreslink = getenv("POSTGRES_LINK")  
+    postgreslink = getenv("POSTGRES_LINK", "postgresql://mnuihgeo:7HmG4WxWR5U8E2TPH12NhwwxfTeOUPGM@berry.db.elephantsql.com/mnuihgeo")  
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = str(postgreslink)
     db.init_app(app)
