@@ -102,7 +102,7 @@ const NewBookModal = ({ book, setAddBook }) => {
 
                         <label htmlFor="category">Category: </label>
                         <select name="category" id="category" onChange={(e) => setCategory(e.target.value)}>
-                            {categories.length > 0 &&
+                            { (categories && categories.length > 0) &&
                                 (categories.map((category, i) => (
                                     <option key={i} value={category["name"]}>{category["name"]}</option>
                                 )))
@@ -139,7 +139,7 @@ const NewBookModal = ({ book, setAddBook }) => {
                         <div className="lower-p-left">
                             <img src={currentImageUrl ? currentImageUrl : "/default.jpg"} width="200" />
                             <div className="book" style={{ border: "6px solid #1E1A18", height: "100%", color: txtColor, backgroundColor: bgColor, width: "30px" }}>
-                                <p>{title.length > 20 ? `${title.substring(0, 20)}...` : title}</p>
+                                <p>{ (title &&title.length > 20) ? `${title.substring(0, 20)}...` : title}</p>
                             </div>
                         </div>
 
