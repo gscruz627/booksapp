@@ -8,6 +8,7 @@ from os import getenv
 
 def create_app():
     postgreslink = getenv("POSTGRES_LINK")
+    print(postgreslink)
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = str(postgreslink)
     db.init_app(app)
