@@ -6,10 +6,9 @@ from routing.mainroutes import main as main_blueprint
 from models import Book, User
 from os import getenv
 
-print(getenv("POSTGRES_LINK"))
-print(getenv("CLIENT_URL"))
+postgreslink = getenv("POSTGRES_LINK")
+
 def create_app():
-    postgreslink = getenv("POSTGRES_LINK")
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = str(postgreslink)
     db.init_app(app)
