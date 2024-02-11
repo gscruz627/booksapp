@@ -1,6 +1,6 @@
 # Books App
 
-##Project Description
+##Project Description##
 _**Books App**_ is a web app that allows users to search for books, as well as save them
 and categorize them by currently reading, wish to read, and already read.
 Users Can Also Get a visual representation, using a virtual library, and use
